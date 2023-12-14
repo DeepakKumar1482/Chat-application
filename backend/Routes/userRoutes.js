@@ -4,7 +4,8 @@ const {
     registerController,
     getuserController,
     contactDataController,
-    savedcontactsController
+    savedcontactsController,
+    connectusersController
 } = require('../Controller/userController.js');
 const authmiddlwear = require("../Controller/authmiddlewear.js");
 const router = express.Router();
@@ -13,4 +14,5 @@ router.post('/register', registerController);
 router.get('/getUser', authmiddlwear, getuserController);
 router.post('/ContactData', authmiddlwear, contactDataController);
 router.get("/savedcontacts", authmiddlwear, savedcontactsController);
+router.get("/connectusers", authmiddlwear, connectusersController);
 module.exports = router;

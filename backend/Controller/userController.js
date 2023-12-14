@@ -201,4 +201,20 @@ const savedcontactsController = async(req, res) => {
         })
     }
 }
-module.exports = { loginController, registerController, getuserController, contactDataController, savedcontactsController };
+const connectusersController = async(req, res) => {
+    try {
+        const user = await contactModel.findOne({ UserID: req.userId });
+        // console.log(user);
+        const arr = user.contacts;
+        res.status(200).send({
+            success: true,
+            arr
+        })
+    } catch (err) {
+        console.log(err);
+        res.status(500).send({
+            success: false,
+        })
+    }
+}
+module.exports = { loginController, registerController, getuserController, contactDataController, savedcontactsController, connectusersController };
