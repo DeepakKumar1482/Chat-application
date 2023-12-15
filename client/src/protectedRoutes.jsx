@@ -45,7 +45,6 @@
 
 import React,{useEffect} from 'react';
 import { Navigate } from 'react-router-dom';
-// import  axios from 'axios';
 import  axios from 'axios';
 const ProtectedRoutes = ({children}) => {
   const getUser=async()=>{
