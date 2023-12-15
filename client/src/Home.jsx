@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import io from 'socket.io-client';
 import axios from 'axios';
 import { Form, Input, message } from 'antd';
@@ -19,10 +20,12 @@ const Home = () => {
   const [id, setId] = useState([]);
   const [naam, setName] = useState();
   const [contactCard, setContactCard] = useState(false);
-
+  const[userName,setuserName]=useState([]);
   const callboth = async (name) => {
     await handleConnect(name);
     await handleConnect(name);
+    setSendmessage([]);
+    setReceiveMessage([]);
   };
   const sendChatMessage = () => {
     const currentTime = new Date();
@@ -95,6 +98,7 @@ const Home = () => {
 
   const [savedContacts, setSavedContacts] = useState([]);
 
+
   const getContacts = async () => {
     try {
       const res = await axios.get('http://localhost:3000/api/v1/user/savedcontacts', {
@@ -103,7 +107,8 @@ const Home = () => {
         },
       });
       if (res.data.success) {
-        setSavedContacts(res.data.arr);
+        setSavedContacts(res.data.User.contacts);
+        setuserName(res.data.User.name);
       }
     } catch (err) {
       console.log(err);
@@ -135,8 +140,11 @@ const Home = () => {
   return (
     <div>
       <div className='h-screen w-screen bg-gray-800 flex' style={{ fontFamily: 'Fira Sans, sans-serif' }}>
-        <div className='h-screen overflow-y-auto flex flex-col bg-slate-800 w-1/3'>
-          <div className='h-14 w-full flex justify-end '>
+        <div className='h-screen overflow-y-auto flex flex-col gap-6 bg-slate-800 w-1/3'>
+          <div className='h-14 w-full flex justify-end'>
+          <div className='h-full  w-3/4 flex items-center text-2xl text-white'>
+              <h1 className='pl-3'>{userName}</h1>
+            </div>
             <button
               onClick={handleContact}
               className='text-white border border-white hover:border hover:border-green-300 hover:bg-green-300 hover:text-white transition ease-in-out duration-1000 m-2 w-32 rounded-3xl shadow-md shadow-black'
@@ -144,7 +152,7 @@ const Home = () => {
               Add Contact
             </button>
           </div>
-          <div className='h-full w-full '>
+          <div className='h-full w-full  '>
             {contactCard && (
               <div className='w-full h-5/6'>
                 <div className='w-full h-full flex items-center justify-center'>
@@ -178,32 +186,33 @@ const Home = () => {
                 </div>
               </div>
             )}
-            {!contactCard && (
-              <div className='w-full h-full flex flex-col gap-5 p-2 '>
-                {savedContacts.map((value, key) => (
-                  <div
-                    onClick={() => callboth(value.contactuser)}
-                    key={key}
-                    className=' w-full h-12 flex rounded-md shadow-md shadow-black hover:cursor-pointer hover:bg-gray-700 transition ease-in-out duration-1000'
-                  >
-                    <div className='w-14 h-12 p-1'>
-                      <img src={DP} alt='' />
-                    </div>
-                    <div className='w-full h-12 text-white text-xl flex justify-start ps-8 items-center'>
-                      {value.contactuser}
-                    </div>
-                  </div>
-                ))}
+{!contactCard && (
+        <div className='w-full h-full flex flex-col gap-5 p-2'>
+          {savedContacts.map((value, key) => (
+            <Link to={`/chat/${value._id}`} key={key}>
+              <div
+                onClick={() => callboth(value.contactuser)}
+                className='w-full h-12 flex rounded-md shadow-md shadow-black hover:cursor-pointer hover:bg-gray-700 transition ease-in-out duration-1000'
+              >
+                <div className='w-14 h-12 p-1'>
+                  <img src={DP} alt='' />
+                </div>
+                <div className='w-full h-12 text-white text-xl flex justify-start ps-8 items-center'>
+                  {value.contactuser}
+                </div>
               </div>
-            )}
+            </Link>
+          ))}
+        </div>
+      )}
           </div>
         </div>
-        <div className='h-screen w-2/3  bg-gray-600' style={backgroundImageStyle}>
-        <div className='h-12 bg-gray-800 text-white text-2xl flex items-center shadow-lg' >
+        <div className='h-screen w-2/3 bg-gray-800' style={backgroundImageStyle}>
+        <div className='h-12 bg-gray-800 text-white text-2xl flex items-center ' >
           <img className='h-3/4 ps-5' src={DP} alt="" />
           <h1 className='ps-5'>{naam}</h1>
           </div>
-        <div className='w-full h-4/5 flex flex-col-reverse overflow-y-auto '>
+          <div className='w-full h-4/5 flex flex-col-reverse overflow-y-auto '>
   <div className='flex flex-col pt-2' style={{ scrollbarWidth: 'thin', scrollbarColor: '#4A5568 #2D3748' }}>
     {[...receiveMessage, ...sendmessage].sort((a, b) => a.timestamp - b.timestamp).map((message, index) => (
       <div

@@ -191,7 +191,7 @@ const savedcontactsController = async(req, res) => {
         res.status(200).send({
             success: true,
             message: "Successfully retrieved contacts",
-            arr
+            User
         })
     } catch (err) {
         console.log(err);
