@@ -143,7 +143,8 @@ const Home = () => {
         <div className='h-screen overflow-y-auto flex flex-col gap-6 bg-slate-800 w-1/3'>
           <div className='h-14 w-full flex justify-end'>
           <div className='h-full  w-3/4 flex items-center text-2xl text-white'>
-              <h1 className='pl-3'>{userName}</h1>
+              <h1 className='pl-3 w-1/2 flex justify-center items-center h-11 mr-1 text-2xl shadow-md shadow-black
+              rounded-md bg-gradient-to-r from-blue-500 to-green-500 text-white '>{userName}</h1>
             </div>
             <button
               onClick={handleContact}
